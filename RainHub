@@ -1,27 +1,27 @@
-local Rayfield = loadstring(game:HttpGet("(link unavailable)"))()
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local window = Rayfield:CreateWindow({
-    Name = "Bloxfruit Auto-Level",
+    Name = "Bloxfruit Auto Farm",
     Parent = game.StarterGui.ScreenGui,
     Color = Color3.fromRGB(255, 255, 255),
 })
 
-local tab = window:CreateTab("Auto-Level")
+local tab = window:CreateTab("Farm Settings")
 local section = tab:CreateSection("Settings")
 
 local toggle = section:CreateToggle({
-    Name = "Auto-Level",
-   CurrentValue = false,
-   Callback = function(value)
-        getgenv().autoLevel = value
+    Name = "Auto Farm",
+    CurrentValue = false,
+    Callback = function(value)
+        getgenv().autoFarm = value
     end,
 })
 
 local farmLocation = section:CreateInput({
     Name = "Farm Location",
     PlaceholderText = "X, Y, Z",
-   CurrentValue = "0, 0, 0",
-   Callback = function(value)
+    CurrentValue = "0, 0, 0",
+    Callback = function(value)
         getgenv().farmLocation = Vector3.new(tonumber(value:match("([^,]+),([^,]+),([^,]+)"))())
     end,
 })
@@ -29,8 +29,8 @@ local farmLocation = section:CreateInput({
 local farmRadius = section:CreateSlider({
     Name = "Farm Radius",
     Range = {0, 100},
-   CurrentValue = 10,
-   Callback = function(value)
+    CurrentValue = 10,
+    Callback = function(value)
         getgenv().farmRadius = value
     end,
 })
@@ -38,21 +38,22 @@ local farmRadius = section:CreateSlider({
 local farmInterval = section:CreateSlider({
     Name = "Farm Interval",
     Range = {1, 60},
-   CurrentValue = 5,
-   Callback = function(value)
+    CurrentValue = 5,
+    Callback = function(value)
         getgenv().farmInterval = value
     end,
 })
 ```
-*Auto-Level Script:*
+
 ```
-getgenv().autoLevel = false
+-- Bloxfruit Auto Farm Script
+getgenv().autoFarm = false
 getgenv().farmLocation = Vector3.new(0, 0, 0)
 getgenv().farmRadius = 10
 getgenv().farmInterval = 5
 
 while true do
-    if getgenv().autoLevel then
+    if getgenv().autoFarm then
         local player = game.Players.LocalPlayer
         local NPCs = game.Workspace:GetDescendants()
         
@@ -63,11 +64,12 @@ while true do
             end
         end
         
-        -- Level up logic
-        local experience = player.PlayerStats.Experience.Value
-        if experience >= player.PlayerStats.NextLevelExperience.Value then
-            player.PlayerStats.Experience.Value = 0
-            player.PlayerStats.Level.Value = player.PlayerStats.Level.Value + 1
+        -- Collect fruits
+        for _, fruit in pairs(game.Workspace.Fruits:GetDescendants()) do
+            if (fruit.Position - getgenv().farmLocation).Magnitude <= getgenv().farmRadius then
+                player.Character.HumanoidRootPart.CFrame = fruit.CFrame
+                wait(0.1)
+            end
         end
     end
     
