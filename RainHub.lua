@@ -1,10 +1,9 @@
-if game.PlaceId == 2753915549 then
+ if game.PlaceId == 2753915549 then
     local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
     
     -- Rayfield UI Script
     local window = Rayfield:CreateWindow({
         Name = "Bloxfruit Auto Farm",
-        Parent = game.StarterGui.ScreenGui,
         Color = Color3.fromRGB(255, 255, 255),
     })
     
