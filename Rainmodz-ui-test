@@ -1,4 +1,4 @@
-Sure! Here's the updated code with the `ImageButton` connected to the `Frame`:
+Sure! Here's the updated script with the functionality to toggle the GUI visibility and make the `ImageButton` draggable along with the `Frame`:
 
 ```lua
 local G2L = {}
@@ -162,6 +162,7 @@ local UIS = game:GetService("UserInputService")
 local player = game.Players.LocalPlayer
 local gui = G2L["0"]
 local frame = G2L["1"]
+local imageButton = G2L["6"]
 
 -- Variable to toggle visibility
 local guiOpen = true
@@ -175,10 +176,20 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     end
 end)
 
--- Enable dragging functionality
+-- Enable dragging functionality for Frame and ImageButton
 local dragging
 local dragStart
 local startPos
+
+local function updateDrag(input)
+    local delta = input.Position - dragStart
+    frame.Position = UDim2.new(
+        startPos.X.Scale,
+        startPos.X.Offset + delta.X,
+        startPos.Y.Scale,
+        startPos.Y.Offset + delta.Y
+    )
+end
 
 frame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -195,15 +206,29 @@ end)
 
 frame.InputChanged:Connect(function(input)
     if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = input.Position - dragStart
-        frame.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
+        updateDrag(input)
+    end
+end)
+
+imageButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+imageButton.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        updateDrag(input)
     end
 end)
 
 return G2L["0"], require
+
 
