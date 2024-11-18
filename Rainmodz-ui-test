@@ -1,3 +1,6 @@
+Sure! Here's the updated code with the `ImageButton` connected to the `Frame`:
+
+```lua
 local G2L = {}
 
 -- Require G2L wrapper
@@ -148,7 +151,7 @@ G2L["6"].SelectionOrder = 0
 G2L["6"].Size = UDim2.new(0, 90, 0, 71)
 G2L["6"].Visible = true
 G2L["6"].ZIndex = 1
-G2L["6"].Parent = G2L["0"]
+G2L["6"].Parent = G2L["1"]  -- Connect ImageButton to Frame
 
 G2L["7"].Name = [[UICorner]]
 G2L["7"].CornerRadius = UDim.new(0, 8)
@@ -203,3 +206,4 @@ frame.InputChanged:Connect(function(input)
 end)
 
 return G2L["0"], require
+
